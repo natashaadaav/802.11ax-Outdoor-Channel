@@ -1,6 +1,6 @@
 function [ color ] = getRainbow( Npath )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+% This function allows you to get an RGB vector for visualizing graphs, 
+% depending on the minimum required number of colors - Npath.
 color = [];
 if Npath<=12
     step = 0.5;
@@ -32,7 +32,5 @@ end;
 for b=flip((0+step):step:1)
     color = [color; [0,1,b]];
 end;
-
-
 end
 
