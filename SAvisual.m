@@ -1,0 +1,33 @@
+distance = [45 60 80 100 200 300 400 500 1000];
+xsAP = round(sqrt(distance.^2-(32-1.5).^2));
+SA = {};
+i = 0;
+for scenario = scenarios
+    i = i + 1;
+    RxSA = [];
+    legendText = {'Исходный сигнал'};
+    for xAP = xsAP
+        if ((scenario==11)||(scenario==12))&&(xAP==xsAP(1))
+            continue
+        end;
+        load(strcat('SAparams_Scenario',int2str(scenario),'_QAM1024_x',...
+            int2str(xAP),'.mat'))
+        RxSA = horzcat(RxSA, cell2mat(cellfun(@(x) x(:,1),flip(rxSig(:,1).'),...
+            'UniformOutput',false)));
+        legendText{end+1} = strcat('Принятый сигнал МС1 x = ',int2str(xAP),' м');
+        legendText{end+1} = strcat('Принятый сигнал МС2 x = ',int2str(xAP),' м');
+    end;
+    SA{end+1} = dsp.SpectrumAnalyzer('Name', 'Frequency response', ...
+        'SpectrumType', 'Power', ...
+        'SampleRate',   fs, ...
+        'Title',        strcat('Частотная характеристика, сценарий:',...
+        int2str(scenario)), ...
+        'ShowLegend',   true, ...
+        'ChannelNames', legendText, ...
+    'SpectralAverages', 100);
+    
+    SA{1,i}([dataForChan.' ...
+    RxSA]);
+    
+    % Вот тут надо сохранить как фигуру
+end;
